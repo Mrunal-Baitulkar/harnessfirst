@@ -1,17 +1,37 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server-deployment
+  name: test2
+  namespace: test2
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      app: server-app
+      app: harness
   template:
     metadata:
       labels:
-        app: server-app
+        app: harness
     spec:
       containers:
-        - name: server-app
-          image: 
-      restartPolicy: Always  
+        - name: newharness
+          image: aeon11/harness:1.0
+          ports:
+            - containerPort: 7000
+          imagePullPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1svc
+  namespace: test1
+spec:
+  selector:
+    app: harness
+  ports:
+    - port: 80
+      targetPort: 7000
+  type: NodePort
